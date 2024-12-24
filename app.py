@@ -7,8 +7,14 @@ import numpy as np
 from squash_analysis import generate_match_report
 from functools import lru_cache
 import threading
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Global cache for storing data
 cache = {
@@ -20,7 +26,7 @@ cache = {
 
 def initialize_data():
     """Initialize all data and visualizations at server startup"""
-    print("Initializing data and generating visualizations...")
+    logger.info("Initializing data and generating visualizations...")
     
     try:
         # Generate the match report
@@ -50,7 +56,8 @@ def initialize_data():
                 ball_pos = ast.literal_eval(row['Ball RL World Position'])
                 if ball_pos and not all(v == 0 for v in ball_pos):
                     ball_positions.append(ball_pos)
-            except:
+            except Exception as e:
+                logger.warning(f"Error processing row: {e}")
                 continue
         
         # Store processed data in cache
@@ -69,35 +76,61 @@ def initialize_data():
             'player2': player2_positions
         }
         
-        print("Data initialization complete!")
+        logger.info("Data initialization complete!")
         
     except Exception as e:
-        print(f"Error during data initialization: {str(e)}")
+        logger.error(f"Error during data initialization: {str(e)}")
         raise
 
 # Initialize data in a separate thread to not block server startup
 threading.Thread(target=initialize_data).start()
 
+# Routes
 @app.route('/')
-def index():
-    # Wait for data to be initialized if necessary
-    if not all(cache.values()):
-        return "Data is still being initialized. Please refresh in a few seconds.", 503
-    
-    return render_template('index.html', 
-                         positions=json.dumps(cache['positions_data']),
-                         shot_types=json.dumps(cache['shot_types']),
-                         match_report=cache['match_report'])
+def home():
+    return render_template('projects.html')
+
+@app.route('/projects/squash')
+def squash():
+    try:
+        # Wait for data to be initialized if necessary
+        if not all(cache.values()):
+            return "Data is still being initialized. Please refresh in a few seconds.", 503
+        
+        return render_template('squash.html', 
+                             positions=json.dumps(cache['positions_data']),
+                             shot_types=json.dumps(cache['shot_types']),
+                             match_report=cache['match_report'])
+    except Exception as e:
+        logger.error(f"Error in squash route: {str(e)}")
+        return "An error occurred. Please try again later.", 500
 
 @app.route('/get_heatmap_data')
 def get_heatmap_data():
-    if not cache['heatmap_data']:
-        return jsonify({'error': 'Data not yet initialized'}), 503
-    return jsonify(cache['heatmap_data'])
+    try:
+        if not cache['heatmap_data']:
+            return jsonify({'error': 'Data not yet initialized'}), 503
+        return jsonify(cache['heatmap_data'])
+    except Exception as e:
+        logger.error(f"Error in heatmap data route: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
 
 @app.route('/video/<path:filename>')
 def serve_video(filename):
-    return send_from_directory('static', filename)
+    try:
+        return send_from_directory('static', filename)
+    except Exception as e:
+        logger.error(f"Error serving video: {str(e)}")
+        return "File not found", 404
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)

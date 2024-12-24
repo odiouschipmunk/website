@@ -1,0 +1,145 @@
+{% extends "layout.html" %}
+
+{% block title %}Squash Analysis Dashboard{% endblock %}
+
+{% block extra_js_head %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Video Analysis Section -->
+    <div class="dashboard-section">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="bi bi-camera-video me-2"></i>
+                            Original Match Analysis
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="video-container">
+                            <img src="{{ url_for('serve_video', filename='annotated2.gif') }}" alt="Match Analysis" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="bi bi-box me-2"></i>
+                            3D Match Visualization
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <img src="{{ url_for('static', filename='3d_match_visualization.png') }}" alt="3D Match Visualization" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Position Analysis Section -->
+    <div class="dashboard-section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="bi bi-graph-up me-2"></i>
+                            Position Distance Analysis
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <img src="{{ url_for('static', filename='t_position_distance.png') }}" alt="Position Distance Plot" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Player Movement Analysis Section -->
+    <div class="dashboard-section">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="bi bi-pie-chart me-2"></i>
+                            Shot Distribution
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="visualization-container">
+                            <canvas id="shotDistribution"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="bi bi-person me-2"></i>
+                            Player 1 Heatmap
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="visualization-container">
+                            <div id="player1Heatmap"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="bi bi-person me-2"></i>
+                            Player 2 Heatmap
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="visualization-container">
+                            <div id="player2Heatmap"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Match Report Section -->
+    <div class="dashboard-section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="bi bi-file-text me-2"></i>
+                            Match Analysis Report
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <pre class="match-report">{{ match_report }}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Pass data from Flask to JavaScript
+    const positionsData = {{ positions|safe }};
+    const shotTypes = {{ shot_types|safe }};
+</script>
+<script src="{{ url_for('static', filename='js/visualization.js') }}"></script>
+{% endblock %} 

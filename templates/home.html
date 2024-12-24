@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}Your Name - Home{% endblock %}
+
+{% block content %}
+<div class="hero-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Hello, I'm Your Name</h1>
+                <p class="lead mb-4">A passionate developer specializing in machine learning, computer vision, and web development.</p>
+                <div class="d-flex gap-3">
+                    <a href="/projects" class="btn btn-primary px-4">View Projects</a>
+                    <a href="/contact" class="btn btn-outline-primary px-4">Contact Me</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="Profile" class="img-fluid rounded-circle shadow">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="featured-projects py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Featured Projects</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <img src="{{ url_for('static', filename='img/squash-preview.jpg') }}" class="card-img-top" alt="Squash Analysis">
+                    <div class="card-body">
+                        <h5 class="card-title">Squash Analysis Dashboard</h5>
+                        <p class="card-text">Advanced analytics and visualization tool for squash matches using computer vision.</p>
+                        <a href="/projects/squash" class="btn btn-primary">View Project</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Add more project cards here -->
+        </div>
+    </div>
+</div>
+
+{% endblock %} 
