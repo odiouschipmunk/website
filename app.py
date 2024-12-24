@@ -85,12 +85,11 @@ def initialize_data():
 # Initialize data in a separate thread to not block server startup
 threading.Thread(target=initialize_data).start()
 
-# Routes
 @app.route('/')
 def home():
-    return render_template('projects.html')
+    return render_template('home.html')
 
-@app.route('/projects/squash')
+@app.route('/squash')
 def squash():
     try:
         # Wait for data to be initialized if necessary
