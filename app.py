@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, send_from_directory
+from flask_compress import Compress
 import pandas as pd
 import json
 import ast
@@ -8,13 +9,25 @@ from squash_analysis import generate_match_report
 from functools import lru_cache
 import threading
 import logging
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+Compress(app)  # Enable compression for faster load times
+
+# App configuration
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000  # Cache static files for 1 year
+app.config['COMPRESS_MIMETYPES'] = ['text/html', 'text/css', 'text/javascript', 'application/javascript', 'application/json']
 
 # Global cache for storing data
 cache = {
@@ -122,6 +135,11 @@ def serve_video(filename):
         logger.error(f"Error serving video: {str(e)}")
         return "File not found", 404
 
+@app.route('/health')
+def health_check():
+    """Health check endpoint for Render"""
+    return jsonify({"status": "healthy"}), 200
+
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('404.html'), 404
@@ -132,4 +150,5 @@ def internal_error(error):
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    debug = os.environ.get('FLASK_ENV') == 'development'
+    app.run(host='0.0.0.0', port=port, debug=debug)

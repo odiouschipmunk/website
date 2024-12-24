@@ -2,6 +2,7 @@ services:
   - type: web
     name: squash-analysis-dashboard
     env: python
+    region: frankfurt  # Choose the region closest to your users
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
     envVars:
@@ -9,4 +10,13 @@ services:
         value: 3.9.0
       - key: FLASK_ENV
         value: production
-    autoDeploy: true 
+      - key: FLASK_APP
+        value: app.py
+      - key: GUNICORN_CMD_ARGS
+        value: "--workers=2 --threads=4 --timeout=60"
+    healthCheckPath: /
+    autoDeploy: true
+    disk:
+      name: sqlite
+      mountPath: /data
+      sizeGB: 1 
