@@ -2,7 +2,6 @@ services:
   - type: web
     name: squash-analysis-dashboard
     env: python
-    region: frankfurt
     buildCommand: pip install -r requirements.txt
     startCommand: python app.py
     envVars:
@@ -10,11 +9,4 @@ services:
         value: 3.9.0
       - key: FLASK_ENV
         value: production
-      - key: FLASK_APP
-        value: app.py
-    healthCheckPath: /
-    autoDeploy: true
-    disk:
-      name: sqlite
-      mountPath: /data
-      sizeGB: 1 
+    autoDeploy: true 
