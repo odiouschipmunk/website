@@ -9,10 +9,8 @@ from squash_analysis import generate_match_report
 from functools import lru_cache
 import threading
 import logging
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+
 
 # Configure logging
 logging.basicConfig(
