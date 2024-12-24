@@ -10,6 +10,28 @@
 
 {% block content %}
 <div class="container py-4">
+    <!-- Project Overview Section -->
+    <div class="dashboard-section mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Project Overview
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4 class="mb-3">Why I Built This</h4>
+                        <p class="lead mb-4">
+                            Squash has always been a big part of my life, but improving at the game has often felt out of reach without access to expensive coaching. Watching hours of match footage and trying to figure out what I was doing wrong was frustrating and overwhelming. I realized there had to be a better way—not just for me, but for anyone who loves the game and wants to get better without breaking the bank.
+                            That’s why I created this project: to combine my passion for squash with my love for technology. My goal is to make personalized feedback and actionable insights accessible to players everywhere, regardless of their background. Squash is already an expensive sport, but I believe that how much money someone has shouldn’t limit how good they can become. This project is my way of helping to democratize the sport and make improvement possible for everyone.                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Video Analysis Section -->
     <div class="dashboard-section">
         <div class="row g-4">
@@ -142,4 +164,62 @@
     const shotTypes = {{ shot_types|safe }};
 </script>
 <script src="{{ url_for('static', filename='js/visualization.js') }}"></script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .feature-card {
+        padding: 1.5rem;
+        border-radius: 12px;
+        background: var(--card-background);
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-shadow-hover);
+    }
+
+    .feature-card i {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        background: var(--gradient-1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .tech-stack-card {
+        padding: 1.5rem;
+        border-radius: 12px;
+        background: var(--gradient-3);
+        color: white;
+        height: 100%;
+    }
+
+    .tech-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .tech-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .tech-badge:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .lead {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: var(--text-secondary);
+    }
+</style>
 {% endblock %} 
