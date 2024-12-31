@@ -1,263 +1,212 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>odiouschipmunk</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --background: #f8f9fa;
+            --text: #212529;
+            --card-bg: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --overlay: rgba(0, 0, 0, 0.7);
+        }
 
-{% block title %}odiouschipmunk{% endblock %}
+        [data-theme="dark"] {
+            --background: #1a1a1a;
+            --text: #ffffff;
+            --card-bg: #2d2d2d;
+            --shadow: rgba(255, 255, 255, 0.1);
+            --overlay: rgba(0, 0, 0, 0.8);
+        }
 
-{% block content %}
-<div class="projects-grid">
-    <div class="container py-5">
-        <div class="row g-4 justify-content-center">
-            <!-- Squash Analysis Project -->
-            <div class="col-md-6 col-lg-4">
-                <div class="project-card">
-                    <div class="project-card__inner">
-                        <div class="project-card__face project-card__face--front">
-                            <div class="project-preview">
-                                <div class="project-preview__icon">
-                                    <i class="bi bi-camera-video"></i>
-                                </div>
-                                <h3 class="project-preview__title">Squash Analysis</h3>
-                                <div class="project-preview__tech">
-                                    <span class="tech-tag">Python</span>
-                                    <span class="tech-tag">ML</span>
-                                    <span class="tech-tag">CV</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="project-card__face project-card__face--back">
-                            <div class="project-details">
-                                <h4 class="project-details__title">Squash Analysis Dashboard</h4>
-                                <p class="project-details__description">
-                                    Advanced analytics and visualization tool for squash matches using computer vision and machine learning.
-                                </p>
-                                <ul class="project-details__features">
-                                    <li><i class="bi bi-check-circle-fill"></i> Real-time match analysis</li>
-                                    <li><i class="bi bi-check-circle-fill"></i> Player movement heatmaps</li>
-                                    <li><i class="bi bi-check-circle-fill"></i> Shot distribution analytics</li>
-                                </ul>
-                                <div class="project-details__actions">
-                                    <a href="/squash" class="btn btn-primary btn-glow">
-                                        <i class="bi bi-eye me-2"></i>View Project
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
 
-            <!-- More Projects Coming Soon -->
-            <div class="col-md-6 col-lg-4">
-                <div class="project-card project-card--coming-soon">
-                    <div class="project-card__inner">
-                        <div class="coming-soon">
-                            <div class="coming-soon__icon">
-                                <i class="bi bi-plus-circle"></i>
-                            </div>
-                            <h3 class="coming-soon__title">More Projects</h3>
-                            <p class="coming-soon__text">Coming Soon</p>
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 10px var(--shadow);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text) !important;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+        }
+
+        .tile {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px var(--shadow);
+            margin-bottom: 30px;
+            background-color: var(--card-bg);
+        }
+
+        .tile:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px var(--shadow);
+        }
+
+        .tile img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            transition: transform 0.5s ease;
+        }
+
+        .tile:hover img {
+            transform: scale(1.05);
+        }
+
+        .tile .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--overlay);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .tile:hover .overlay {
+            opacity: 1;
+        }
+
+        .overlay-content {
+            max-width: 800px;
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.5s ease;
+        }
+
+        .tile:hover .overlay-content {
+            transform: translateY(0);
+        }
+
+        .project-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .project-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(45deg, #2196F3, #00BCD4);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-graph-up me-2"></i>
+                odiouschipmunk
+            </a>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="bi bi-moon-fill"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="tile">
+                    <img src="../static/annotated2.gif" alt="Squash Analysis">
+                    <div class="overlay">
+                        <div class="overlay-content">
+                            <h1 class="project-title">Advanced Squash Analysis</h1>
+                            <p class="project-description">
+                                Squash has always been a big part of my life, but improving at the game has often felt out of reach without access to expensive coaching. Watching hours of match footage and trying to figure out what I was doing wrong was frustrating and overwhelming. I realized there had to be a better way—not just for me, but for anyone who loves the game and wants to get better without breaking the bank.
+                            </p>
+                            <p class="project-description">
+                                That’s why I created this project: to combine my passion for squash with my love for technology. My goal is to make personalized feedback and actionable insights accessible to players everywhere, regardless of their background. Squash is already an expensive sport, but I believe that how much money someone has shouldn’t limit how good they can become. This project is my way of helping to democratize the sport and make improvement possible for everyone.
+                            </p>
+                            <a href="squash.html" class="cta-button">Explore Analysis</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const icon = themeToggle.querySelector('i');
 
-{% endblock %}
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateIcon(savedTheme);
 
-{% block extra_css %}
-<style>
-    .projects-grid {
-        min-height: calc(100vh - 76px);
-        background: linear-gradient(135deg, var(--background-color) 0%, #ffffff 100%);
-    }
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateIcon(newTheme);
+        });
 
-    .project-card {
-        perspective: 1500px;
-        height: 400px;
-    }
+        function updateIcon(theme) {
+            icon.className = theme === 'light' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+        }
+    </script>
 
-    .project-card__inner {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        transition: transform 0.8s;
-        transform-style: preserve-3d;
-        cursor: pointer;
-    }
-
-    .project-card:hover .project-card__inner {
-        transform: rotateY(180deg);
-    }
-
-    .project-card__face {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        backface-visibility: hidden;
-        border-radius: var(--border-radius);
-        overflow: hidden;
-        box-shadow: var(--shadow-md);
-        transition: box-shadow 0.3s ease;
-    }
-
-    .project-card:hover .project-card__face {
-        box-shadow: var(--shadow-lg);
-    }
-
-    .project-card__face--front {
-        background: var(--card-background);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .project-card__face--back {
-        background: var(--card-background);
-        transform: rotateY(180deg);
-    }
-
-    .project-preview {
-        text-align: center;
-        padding: 2rem;
-    }
-
-    .project-preview__icon {
-        font-size: 4rem;
-        color: var(--accent-color);
-        margin-bottom: 1.5rem;
-        animation: float 3s ease-in-out infinite;
-    }
-
-    .project-preview__title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        color: var(--text-primary);
-    }
-
-    .tech-tag {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        background: var(--accent-color);
-        color: white;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        margin: 0.25rem;
-        opacity: 0.9;
-    }
-
-    .project-details {
-        padding: 2rem;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .project-details__title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        color: var(--text-primary);
-    }
-
-    .project-details__description {
-        color: var(--text-secondary);
-        margin-bottom: 1.5rem;
-        flex-grow: 1;
-    }
-
-    .project-details__features {
-        list-style: none;
-        padding: 0;
-        margin-bottom: 1.5rem;
-    }
-
-    .project-details__features li {
-        margin-bottom: 0.5rem;
-        color: var(--text-primary);
-    }
-
-    .project-details__features i {
-        color: #28a745;
-        margin-right: 0.5rem;
-    }
-
-    .btn-glow {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .btn-glow::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(
-            45deg,
-            transparent,
-            rgba(255,255,255,0.1),
-            transparent
-        );
-        transform: rotate(45deg);
-        animation: glow 2s linear infinite;
-    }
-
-    .project-card--coming-soon .project-card__inner {
-        background: var(--card-background);
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow-md);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .project-card--coming-soon:hover .project-card__inner {
-        transform: translateY(-10px);
-        box-shadow: var(--shadow-lg);
-    }
-
-    .coming-soon {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-    }
-
-    .coming-soon__icon {
-        font-size: 4rem;
-        color: var(--text-secondary);
-        margin-bottom: 1.5rem;
-        opacity: 0.5;
-        transition: transform 0.3s ease;
-    }
-
-    .project-card--coming-soon:hover .coming-soon__icon {
-        transform: scale(1.1);
-    }
-
-    .coming-soon__title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 0.5rem;
-    }
-
-    .coming-soon__text {
-        color: var(--text-secondary);
-    }
-
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-
-    @keyframes glow {
-        0% { transform: rotate(45deg) translateX(-100%); }
-        100% { transform: rotate(45deg) translateX(100%); }
-    }
-</style>
-{% endblock %} 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

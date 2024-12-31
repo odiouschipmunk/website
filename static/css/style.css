@@ -56,6 +56,24 @@ html[data-theme="dark"] {
     --gradient-3: linear-gradient(135deg, #4f46e5, #3730a3);
 }
 
+/* Light theme variables */
+[data-theme="light"] {
+    --background: #f8f9fa;
+    --text: #212529;
+    --card-bg: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --overlay: rgba(0, 0, 0, 0.7);
+}
+
+/* Dark theme variables */
+[data-theme="dark"] {
+    --background: #1a1a1a;
+    --text: #ffffff;
+    --card-bg: #2d2d2d;
+    --shadow: rgba(255, 255, 255, 0.1);
+    --overlay: rgba(0, 0, 0, 0.8);
+}
+
 /* Base Styles */
 body {
     background-color: var(--background-color);
@@ -207,7 +225,6 @@ body {
 .project-preview__icon {
     font-size: 4rem;
     background: var(--gradient-1);
-    -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 1.5rem;
     animation: float 3s ease-in-out infinite;
@@ -219,7 +236,6 @@ body {
     font-weight: 700;
     margin-bottom: 1.5rem;
     background: var(--gradient-1);
-    -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     position: relative;
     display: inline-block;
@@ -535,3 +551,12 @@ body {
     letter-spacing: 0.5px;
 } 
 
+
+.github-link i {
+    font-size: 1.2rem;
+}
+
+.github-link span {
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
